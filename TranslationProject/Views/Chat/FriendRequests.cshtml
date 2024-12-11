@@ -1,0 +1,59 @@
+﻿@model IEnumerable<TranslationModelLibrary.Models.FriendRequests>
+
+@{
+    ViewData["Title"] = "Friend Requests";
+	var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+}
+
+<h1>Friend Requests</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Sender Email</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var request in Model)
+        {
+            <tr>
+                <td>@request.SenderId</td>
+                <td>
+                    <button class="btn btn-success" onclick="acceptFriendRequest('@request.SenderId')">Accept</button>
+                    <button class="btn btn-danger" onclick="declineFriendRequest('@request.SenderId')">Decline</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script>
+        async function acceptFriendRequest(senderId) {
+            const response = await fetch(`http://localhost:5034/api/Messaging/AcceptFriendRequest?senderId=${senderId}&receiverId=${'@userId'}`, {
+                method: 'POST',
+            });
+
+            if (response.ok) {
+                alert('Friend request accepted');
+                location.reload();
+            } else {
+                alert('Failed to accept friend request');
+            }
+        }
+
+        async function declineFriendRequest(senderId) {
+            const response = await fetch(`http://localhost:5034/api/Messaging/DeclineFriendRequest?senderId=${senderId}&receiverId=${'@userId'}`, {
+                method: 'POST',
+            });
+
+            if (response.ok) {
+                alert('Friend request declined');
+                location.reload();
+            } else {
+                alert('Failed to decline friend request');
+            }
+        }
+    </script>
+}

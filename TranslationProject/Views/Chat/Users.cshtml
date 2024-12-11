@@ -1,0 +1,45 @@
+﻿@model IEnumerable<TranslationProject.Models.TranslationUser>
+
+@{
+    ViewData["Title"] = "Users";
+	var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+}
+
+<h1>Users</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Email</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.Email</td>
+                <td>
+                    <button class="btn btn-primary" onclick="sendFriendRequest('@user.Id')">Send Friend Request</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script>
+        async function sendFriendRequest(receiverId) {
+            const response = await fetch(`http://localhost:5034/api/Messaging/SendFriendRequest?senderId=${'@userId'}&receiverId=${receiverId}`, {
+                method: 'POST',
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                alert("Sent friend request!");
+            } else {
+                alert('Failed to send friend request');
+            }
+        }
+    </script>
+}

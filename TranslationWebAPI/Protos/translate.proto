@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+option csharp_namespace = "TranslatorGRPCService";
+
+package translator;
+
+service TranslationService {
+  rpc Translate (TranslationRequest) returns (TranslationResponse);
+}
+
+message TranslationRequest {
+  string sourceText = 1;
+  string sourceLanguage = 2;
+  string targetLanguage = 3;
+}
+
+message TranslationResponse {
+  string translatedText = 1;
+}

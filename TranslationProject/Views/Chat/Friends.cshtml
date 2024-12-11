@@ -1,0 +1,29 @@
+﻿@model IEnumerable<TranslationModelLibrary.Models.FriendRelationship>
+
+@{
+    ViewData["Title"] = "Friends";
+}
+
+<h1>Friends</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Friend</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var relationship in Model)
+        {
+			var friend = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value == relationship.UserId1 ? relationship.UserId2: relationship.UserId1;
+
+            <tr>
+                <td>@friend</td>
+                <td>
+                    <a class="btn btn-primary" href="@Url.Action("Message", "Chat", new { receiverId = friend })">Chat</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
